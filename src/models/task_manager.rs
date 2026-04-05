@@ -43,21 +43,9 @@ impl TaskList {
         self.tasks.is_empty()
     }
 
-    /// Checks if a specific task is pending (incomplete).
-    ///
-    /// # Arguments
-    ///
-    /// * `index` - The zero-based index of the task to check.
-    ///
-    /// # Panics
-    ///
-    /// Panics if the index is out of bounds.
-    ///
-    /// # Returns
-    ///
-    /// `true` if the task is pending, `false` if it has been completed.
-    pub fn if_pending(&self, index: usize) -> bool {
-        self.tasks[index].pending
+    // Returns a reference to a specific task safely
+    pub fn get_task(&self, index: usize) -> Option<&Task> {
+        self.tasks.get(index)
     }
 
     /// Displays the full details of a specific task.

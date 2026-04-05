@@ -14,7 +14,7 @@ use colored::Colorize;
 /// # Note
 ///
 /// This function includes a typo prompt ("Catagory") which should be fixed to "Category".
-fn new_task() -> Task {
+fn get_new_task() -> Task {
     let name: String = read_line("Name: ");
     let description: String = read_line("Description:\n");
     let category: String = read_line("Category: ");
@@ -23,22 +23,7 @@ fn new_task() -> Task {
     Task::new(name, description, category, importance)
 }
 
-/// Prompts the user for a yes/no confirmation.
-/// 
-/// # Arguments
-///
-/// * `prompt` - The message to display to the user.
-///
-/// # Returns
-///
-/// `true` if the user confirms with "y" or "yes", `false` otherwise.
-fn confirm_action(prompt: &str) -> bool {
-    let response = read_line(prompt);
-    match response.trim().to_lowercase().as_str() {
-        "y" | "yes" => true,
-        _ => false,
-    }
-}
+
 
 /// Prompts the user for task details and adds the new task to the `TaskList`.
 /// 
@@ -46,7 +31,7 @@ fn confirm_action(prompt: &str) -> bool {
 /// * `task_list` - A mutable reference to the `TaskList`.
 pub fn add_task(task_list: &mut TaskList) {
     println!("Creating new task...");
-    let task: Task = new_task();
+    let task: Task = get_new_task();
     task_list.add_task(task);
 }
 
@@ -65,7 +50,24 @@ pub fn edit_task (task_list: &mut TaskList) {
         return;
     }
     let index = read_valid_index("Enter task number to edit: ", 1, task_list.len());
-    task_list.replace_task(new_task(), index);
+    task_list.view_task(index);
+    println!("{}","Leave fields as blank to use the previous value. Type '#' to leave the field as blank".yellow());
+
+    if let Some(old_task) = task_list.get_task(index){
+        let name = read_line_compare("Name: ", &old_task.name);
+        let description = read_line_compare("Description: ", &old_task.description);
+        let category = read_line_compare("Category: ", &old_task.category);
+        let importance = read_u8_compare("Importance: ", &old_task.importance);
+        
+        let mut new_task = Task::new(name, description, category, importance);
+        new_task.pending = !confirm_action("Mark as complete (y/n): ");
+
+        task_list.replace_task(new_task, index);
+        println!("{}", "Task successfully updated!".green());
+    }
+    else {
+        println!("{}","Error fetching data!".red());
+    }
 }
 
 /// Prompts the user to select a task and displays its details.
