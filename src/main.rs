@@ -15,7 +15,8 @@ fn main() {
         match get_choice() {
             1 => add_task(&mut task_list),
             2 => edit_task(&mut task_list),
-
+            3 => view_task(&task_list),
+            4 => task_list.view_all(),
             6 => {
                 println!("{}","Exiting app!".green());
                 break;

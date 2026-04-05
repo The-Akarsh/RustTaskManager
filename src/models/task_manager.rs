@@ -24,8 +24,25 @@ impl TaskList {
     }
 
     /** Checks if a specific funciion is pendion and return true if yes  */
-    fn if_pending(&self,index: usize) -> bool{
+    pub fn if_pending(&self,index: usize) -> bool{
          self.tasks[index].pending    
+    }
+
+    /** Prints task details of specific task  */
+    pub fn view_task(&self,index: usize){
+        println!("{}",self.tasks[index]);
+    }
+
+    pub fn view_all(&self){
+        if self.is_empty() {
+            println!("You have no tasks!");
+            return;
+        }
+
+        println!("\n--- All Tasks ---");
+        for (index, task) in self.tasks.iter().enumerate() {
+        task.print_summary(index + 1);
+    }
     }
 
     /** Add a new task to the list */

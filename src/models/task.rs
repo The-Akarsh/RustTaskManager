@@ -1,4 +1,7 @@
-#[derive(Debug)]
+// Bring the formatting library into scope
+use std::fmt;
+use colored::Colorize; 
+
 pub struct Task {
     pub name: String,
     pub description: String,
@@ -17,5 +20,26 @@ impl Task {
             importance,
             pending : true
         }
+    }
+
+    pub fn print_summary(&self, id: usize) {
+        let status = if self.pending { "Pending".yellow() } else { "Done".green() };
+        println!(" [{}] {} ({})", id, self.name, status);
+    }
+
+    
+}
+
+
+// Implement the Display trait  our Task struct
+impl fmt::Display for Task {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let status = if self.pending { "Pending".yellow() } else { "Done".red() };
+        
+        write!(
+            f,
+            "\n--- Task Details ---\nName:        {}\nDescription: {}\nCategory:    {}\nImportance:  {}\nStatus:      {}\n--------------------",
+            self.name, self.description, self.category, self.importance, status
+        )
     }
 }

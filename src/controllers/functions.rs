@@ -24,3 +24,8 @@ pub fn edit_task (task_list: &mut TaskList) {
     task_list.replace_task(new_task(), index);
 
 }
+
+pub fn view_task(task_list: &TaskList){
+    let index = read_valid_index("Enter task number: ", 0, task_list.len());
+    task_list.view_task(index);
+}
