@@ -1,4 +1,5 @@
-use crate::{models::{task::Task, task_manager::TaskList}, views::my_io::{read_line, read_u8}};
+use crate::models::{task::Task, task_manager::TaskList};
+use crate::views::my_io::*;
 
 /** Fn to read new task parameters */
 fn new_task() -> Task {
@@ -15,4 +16,11 @@ pub fn add_task(task_list: &mut TaskList) {
 
     let task: Task = new_task();
     task_list.add_task(task);
+}
+
+pub fn edit_task (task_list: &mut TaskList) {
+
+    let index = read_valid_index("Enter task number to edit: ", 1, task_list.len());
+    task_list.replace_task(new_task(), index);
+
 }

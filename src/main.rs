@@ -2,8 +2,10 @@ mod controllers;
 mod models;
 mod views;
 
+use colored::Colorize;
 use views::my_io::*;
-use crate::{controllers::functions::add_task, models::task_manager::TaskList};
+use controllers::functions::*;
+use  models::task_manager::TaskList;
 
 fn main() {
     let mut task_list: TaskList = TaskList::new();
@@ -12,8 +14,13 @@ fn main() {
         println!();
         match get_choice() {
             1 => add_task(&mut task_list),
+            2 => edit_task(&mut task_list),
 
-            _=> println!()
+            6 => {
+                println!("{}","Exiting app!".green());
+                break;
+            }
+            _=> println!("{}","Invalid option. Please try again!".red())
         }
     }
 }

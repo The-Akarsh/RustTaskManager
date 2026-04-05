@@ -3,7 +3,7 @@ use colored::Colorize;
 
 pub fn get_choice() -> u8 {
     println!();
-    let menu: [&str; 5] = ["Add new task", "Edit task", "View task", "View all tasks", "Delete task" ];
+    let menu: [&str; 6] = ["Add new task", "Edit task", "View task", "View all tasks", "Delete task","Exit" ];
     for (index,item) in menu.iter().enumerate(){
         println!(" {} {}", index+1, item);
     }
@@ -35,11 +35,31 @@ pub fn read_u8(user_prompt : &str) -> u8 {
             Ok(num)  =>  return num,
             Err(_) =>{
                 println!("{}","Error: Invalid input. Please enter a positive number!".red());
-                0
+                continue;
             } 
         };
 
     }
 }
 
+/** Reads user input and returns if it is withint the provided bounds. Else loop untill a valid index is reached
+ * # Arguments
+ * user_prompt : message to display on the screen
+ * 
+ * Returns `user_input - 1`
+ */
+pub fn read_valid_index(user_prompt: &str,lower_limit: usize, upper_limit: usize) -> usize {
+    loop {
+        
+        let index = read_u8(user_prompt);
+        let index: usize = index as usize;
+    
+        if index < lower_limit || index > upper_limit {
+            println!("{}",format!("Invalid user input! The task number out of range. Must be between {} - {}!", lower_limit,upper_limit).red());
+            continue;
+        }
+
+        return index - 1;
+    }
+}
 // pub print_err()
