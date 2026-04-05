@@ -8,7 +8,7 @@ use models::task_manager::TaskList;
 use views::my_io::*;
 
 fn main() {
-    let mut task_list: TaskList = TaskList::new();
+    let mut task_list: TaskList = TaskList::load_from_file();
     println!("\t\tTask Manager");
     loop {
         println!();
@@ -19,6 +19,9 @@ fn main() {
             4 => task_list.view_all(),
             5 => delete_task(&mut task_list),
             6 => {
+                // let file_path = task_list.save_to_file().;
+                let file_path = format!("{}",task_list.save_to_file().display()).italic();
+                println!("Succesfully saved tasks to {} ",file_path);
                 println!("{}", "Exiting app!".green());
                 break;
             }
