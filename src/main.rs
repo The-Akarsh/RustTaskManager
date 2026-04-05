@@ -19,7 +19,6 @@ fn main() {
             4 => task_list.view_all(),
             5 => delete_task(&mut task_list),
             6 => {
-                // let file_path = task_list.save_to_file().;
                 let file_path = format!("{}",task_list.save_to_file().display()).italic();
                 println!("Succesfully saved tasks to {} ",file_path);
                 println!("{}", "Exiting app!".green());
