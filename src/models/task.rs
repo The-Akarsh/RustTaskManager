@@ -1,6 +1,7 @@
 // Bring the formatting library into scope
 use std::fmt;
 use colored::Colorize;
+use serde::{Deserialize, Serialize};
 
 /// Represents a single task with metadata and status tracking.
 ///
@@ -14,6 +15,7 @@ use colored::Colorize;
 /// * `category` - A classification category for organizing related tasks.
 /// * `importance` - A priority level for the task (0-255).
 /// * `pending` - Whether the task is incomplete (`true`) or completed (`false`).
+#[derive(Serialize, Deserialize)]
 pub struct Task {
     pub name: String,
     pub description: String,

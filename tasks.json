@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "name": "Complete this project",
+      "description": "i wanna complete this project man",
+      "category": "productivity",
+      "importance": 5,
+      "pending": false
+    },
+    {
+      "name": "CODM",
+      "description": "play CODM",
+      "category": "fun",
+      "importance": 4,
+      "pending": true
+    }
+  ]
+}

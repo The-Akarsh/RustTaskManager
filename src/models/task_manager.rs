@@ -1,10 +1,14 @@
 use crate::models::task::Task;
-
+use std::fs;
+use serde::{Deserialize, Serialize};
+use directories::ProjectDirs;
+use std::path::PathBuf;
 /// A collection structure to hold and manage all tasks.
 ///
 /// `TaskList` provides a container for multiple `Task` objects and exposes methods
 /// for common operations like viewing, adding, editing, and deleting tasks.
 /// It maintains an internal vector of tasks in insertion order.
+#[derive(Serialize, Deserialize)]
 pub struct TaskList {
     tasks: Vec<Task>,
 }
@@ -130,5 +134,45 @@ impl TaskList {
     /// Removes all tasks from the list.
     pub fn delete_all(&mut self) {
         self.tasks.clear();
+    }
+
+
+    pub fn get_file_path() -> PathBuf {
+        const FILENAME: &str = "Tasks.json";
+        // ProjectDirs::from(qualifier, organization, application_name)
+        if let Some(proj_dirs) = ProjectDirs::from("com", "akarsh", "TaskManager") {
+            let data_dir = proj_dirs.data_dir(); // Automatically finds AppData, Library, or .local
+            
+            fs::create_dir_all(data_dir).expect("Failed to create application data directory!");
+            
+            data_dir.join(FILENAME)
+        } else {
+            // Fallback: If the OS is completely unrecognizable, just save it locally
+            PathBuf::from("tasks.json")
+        }
+    }
+
+    pub fn save_to_file(&self) -> PathBuf {
+        let json_string = serde_json::to_string_pretty(&self)
+            .expect("Critical Error: Failed to serialize tasks.");
+
+        let file_path = Self::get_file_path();
+
+        fs::write(&file_path, json_string)
+            .expect("Critical Error: Failed to write to hard drive.");
+        file_path
+    }
+
+    pub fn load_from_file() -> TaskList {
+        let file_path = Self::get_file_path();
+        match fs::read_to_string(file_path) {
+            Ok(json_string) => {
+                serde_json::from_str(&json_string)
+                    .expect("Critical Error: tasks.json is corrupted!")
+            }
+            Err(_) => {
+                TaskList::new()
+            }
+        }
     }
 }

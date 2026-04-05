@@ -33,6 +33,8 @@ pub fn add_task(task_list: &mut TaskList) {
     println!("Creating new task...");
     let task: Task = get_new_task();
     task_list.add_task(task);
+    task_list.save_to_file();
+    println!("{}", "Task added!".green())
 }
 
 /// Prompts the user to select and edit an existing task.
@@ -63,6 +65,7 @@ pub fn edit_task (task_list: &mut TaskList) {
         new_task.pending = !confirm_action("Mark as complete (y/n): ");
 
         task_list.replace_task(new_task, index);
+        task_list.save_to_file();
         println!("{}", "Task successfully updated!".green());
     }
     else {
@@ -102,6 +105,7 @@ pub fn delete_task(task_list: &mut TaskList){
             let prompt = format!("Are you sure you want to delete task {}? (y/n): ", index + 1);
             if confirm_action(&prompt) {
                 let deleted_name = task_list.delete(index);
+                task_list.save_to_file();
                 println!("{}", format!("Deleted {}", deleted_name).red());
             } else {
                 println!("Deletion cancelled!");
@@ -113,6 +117,7 @@ pub fn delete_task(task_list: &mut TaskList){
             
             if confirm_action(&prompt) {
                 task_list.delete_all();
+                task_list.save_to_file();
                 println!("{}", "Deleted all tasks!".red());
             } else {
                 println!("Deletion cancelled!");
