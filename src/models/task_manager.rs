@@ -1,3 +1,5 @@
+use std::future::pending;
+
 use crate::models::task::Task;
 
 /**  A vector array to hold all tasks */
@@ -41,8 +43,12 @@ impl TaskList {
 
         println!("\n--- All Tasks ---");
         for (index, task) in self.tasks.iter().enumerate() {
-        task.print_summary(index + 1);
+            task.print_summary(index + 1);
+        }
     }
+
+    pub fn status_summary(&self) -> usize {
+        self.tasks.iter().filter(|task| task.pending).count()
     }
 
     /** Add a new task to the list */
@@ -53,5 +59,14 @@ impl TaskList {
     /** Replaces the speified task  with new task  */
     pub fn replace_task(&mut self,new_task:Task, index:usize){
         self.tasks[index] = new_task;
+    }
+
+    pub fn delete(&mut self, index: usize) -> String{
+        let task =  self.tasks.remove(index);
+        task.name
+    }
+
+    pub fn delete_all(&mut self){
+        self.tasks.clear();
     }
 }

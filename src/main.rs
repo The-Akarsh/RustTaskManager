@@ -17,6 +17,7 @@ fn main() {
             2 => edit_task(&mut task_list),
             3 => view_task(&task_list),
             4 => task_list.view_all(),
+            5 => delete_task(&mut task_list),
             6 => {
                 println!("{}","Exiting app!".green());
                 break;
