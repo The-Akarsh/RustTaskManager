@@ -2,7 +2,7 @@
 use std::fmt;
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
-
+use chrono::NaiveDateTime; // Add this to your imports
 /// Represents a single task with metadata and status tracking.
 ///
 /// A `Task` encapsulates information about a to-do item, including its name,
@@ -22,6 +22,7 @@ pub struct Task {
     pub category: String,
     pub importance: u8,
     pub pending: bool,
+    pub deadline : Option<NaiveDateTime>
 }
 
 impl Task {
@@ -51,13 +52,14 @@ impl Task {
     ///     5
     /// );
     /// ```
-    pub fn new(name: String, description: String, category: String, importance: u8) -> Task {
+    pub fn new(name: String, description: String, category: String, importance: u8, deadline: Option<NaiveDateTime>) -> Task {
         Task {
             name,
             description,
             category,
             importance,
             pending: true,
+            deadline,
         }
     }
 
@@ -75,7 +77,11 @@ impl Task {
         } else {
             "Done".green()
         };
-        println!(" [{}] {} ({})", id, self.name, status);
+        let deadline_str = match self.deadline {
+            Some(date) => format!(" [Due: {}]", date.format("%Y-%m-%d %H:%M")).cyan(),
+            None => "".normal(), 
+        };
+        println!(" [{}] {}{} ({})", id, self.name, deadline_str, status);
     }
 }
 
@@ -87,16 +93,17 @@ impl fmt::Display for Task {
     /// Outputs a formatted block showing the complete task information including
     /// name, description, category, importance level, and completion status.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let status = if self.pending {
-            "Pending".yellow()
-        } else {
-            "Done".green()
-        };
+        
+        let status = if self.pending { "Pending".yellow() } else { "Done".green() };
 
+        let deadline_str = match self.deadline {
+            Some(date) => date.format("%Y-%m-%d %H:%M").to_string(),
+            None => "No deadline".to_string(),
+        };
         write!(
             f,
-            "\n--- Task Details ---\nName:        {}\nDescription: {}\nCategory:    {}\nImportance:  {}\nStatus:      {}\n--------------------",
-            self.name, self.description, self.category, self.importance, status
+            "\n--- Task Details ---\nName:        {}\nDescription: {}\nCategory:    {}\nImportance:  {}\nDeadline:    {}\nStatus:      {}\n--------------------",
+            self.name, self.description, self.category, self.importance, deadline_str, status
         )
     }
 }

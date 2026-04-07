@@ -18,8 +18,8 @@ fn get_new_task() -> Task {
     let description: String = read_line("Description:\n");
     let category: String = read_line("Category: ");
     let importance: u8 = read_u8("Importance: ");
-
-    Task::new(name, description, category, importance)
+    let deadline = read_datetime("Deadline (YYYY-MM-DD HH:MM or leave blank): ");
+    Task::new(name, description, category, importance, deadline)
 }
 
 
@@ -59,8 +59,9 @@ pub fn edit_task (task_list: &mut TaskList) {
         let description = read_line_compare("Description: ", &old_task.description);
         let category = read_line_compare("Category: ", &old_task.category);
         let importance = read_u8_compare("Importance: ", &old_task.importance);
-        
-        let mut new_task = Task::new(name, description, category, importance);
+        let deadline = read_datetime_compare("Deadline (YYYY-MM-DD HH:MM): ", old_task.deadline);
+
+        let mut new_task = Task::new(name, description, category, importance, deadline);
         new_task.pending = !confirm_action("Mark as complete (y/n): ");
 
         task_list.replace_task(new_task, index);

@@ -1,5 +1,6 @@
 use std::io::{ Write, stdin, stdout};
 use colored::Colorize;
+use chrono::NaiveDateTime;
 
 /// Displays the main menu and returns the user's choice.
 pub fn get_choice() -> u8 {
@@ -104,6 +105,33 @@ pub fn read_valid_index(prompt: &str,lower_limit: usize, upper_limit: usize) -> 
     }
 }
 
+/// Reads and parses a date and time from user input.
+///
+/// Prompts the user to enter a date and time in the format `YYYY-MM-DD HH:MM`.
+/// If the user leaves the input blank or types `#`, it returns `None`.
+/// Repeatedly prompts until a valid date and time string is provided.
+///
+/// # Arguments
+///
+/// * `prompt` - The message to display when prompting for input.
+///
+/// # Returns
+///
+/// An `Option<NaiveDateTime>` containing the parsed date and time, or `None`.
+pub fn read_datetime(prompt: &str) -> Option<NaiveDateTime> {
+    loop {
+        let input = read_line(prompt);
+        
+        if input.is_empty() || input == "#" { return None; }
+        
+        // Parse the new Date + Time format!
+        match NaiveDateTime::parse_from_str(&input, "%Y-%m-%d %H:%M") {
+            Ok(date) => return Some(date),
+            Err(_) => println!("{}", "Error: Invalid format! Please use YYYY-MM-DD HH:MM (e.g. 2026-04-10 14:30)".red()),
+        }
+    }
+}
+
 /// Prompts the user for a yes/no confirmation.
 /// 
 /// # Arguments
@@ -175,6 +203,34 @@ pub fn read_u8_compare(prompt: &str, old_value: &u8) -> u8 {
     }
 }
 
+/// Reads and validates a date and time, allowing the user to keep the old value or clear it.
+///
+/// Displays a prompt and reads user input. If the input is empty (Enter key),
+/// the `old_date` is returned. If the input is `#`, it returns `None` (clearing the date).
+/// Otherwise, it attempts to parse the input into a `NaiveDateTime` using the
+/// `YYYY-MM-DD HH:MM` format. If parsing fails, it displays an error and prompts again.
+///
+/// # Arguments
+///
+/// * `prompt` - The message to display when prompting for input.
+/// * `old_date` - The existing `Option<NaiveDateTime>` to fall back on if input is empty.
+///
+/// # Returns
+///
+/// An `Option<NaiveDateTime>` representing the new date, the old date, or `None`.
+pub fn read_datetime_compare(prompt: &str, old_date: Option<NaiveDateTime>) -> Option<NaiveDateTime> {
+    loop {
+        let input = read_line(prompt);
+        
+        if input.is_empty() { return old_date; } 
+        if input == "#" { return None; }         
+        
+        match NaiveDateTime::parse_from_str(&input, "%Y-%m-%d %H:%M") {
+            Ok(date) => return Some(date),
+            Err(_) => println!("{}", "Error: Invalid format! Please use YYYY-MM-DD HH:MM (e.g. 2026-04-10 14:30)".red()),
+        }
+    }
+}
 /// Prints a message to standard output in red text, followed by a newline.
 ///
 /// # Arguments
