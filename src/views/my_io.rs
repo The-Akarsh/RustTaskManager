@@ -174,4 +174,30 @@ pub fn read_u8_compare(prompt: &str, old_value: &u8) -> u8 {
         println!("{}", "Error: Invalid input! Please enter a number.".red());
     }
 }
-// pub print_err()
+
+/// Prints a message to standard output in red text, followed by a newline.
+///
+/// # Arguments
+///
+/// * `message` - The text to display.
+pub fn print_err(message:&str) {
+    println!("{}",message.red());
+}
+
+/// Prints a message to standard output in green text without a trailing newline.
+///
+/// # Arguments
+///
+/// * `message` - The text to display.
+pub fn print_green(message:&str) {
+    print!("{}",message.green());
+}
+
+/// Prints a message to standard output in yellow text without a trailing newline.
+///
+/// # Arguments
+///
+/// * `message` - The text to display.
+pub fn print_yellow(message:&str){
+    print!("{}",message.yellow());
+}

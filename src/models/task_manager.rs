@@ -3,6 +3,8 @@ use std::fs;
 use serde::{Deserialize, Serialize};
 use directories::ProjectDirs;
 use std::path::PathBuf;
+use colored::Colorize;
+
 /// A collection structure to hold and manage all tasks.
 ///
 /// `TaskList` provides a container for multiple `Task` objects and exposes methods
@@ -75,7 +77,15 @@ impl TaskList {
             return;
         }
 
+        let total = self.len();
+        let pending = self.status_summary();
+        let completed = total - pending;
+    
         println!("\n--- All Tasks ---");
+
+        println!(
+            "Total: {} | {} | {} |",
+            total, format!("Completed: {}",completed).green(), format!("Pending: {}",pending).yellow());
         for (index, task) in self.tasks.iter().enumerate() {
             task.print_summary(index + 1);
         }

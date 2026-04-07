@@ -1,6 +1,5 @@
 use crate::models::{task::Task, task_manager::TaskList};
 use crate::views::my_io::*;
-use colored::Colorize;
 
 /// Creates a new task by prompting the user for task details.
 ///
@@ -34,7 +33,7 @@ pub fn add_task(task_list: &mut TaskList) {
     let task: Task = get_new_task();
     task_list.add_task(task);
     task_list.save_to_file();
-    println!("{}", "Task added!".green())
+    print_green("Task added!");
 }
 
 /// Prompts the user to select and edit an existing task.
@@ -53,7 +52,7 @@ pub fn edit_task (task_list: &mut TaskList) {
     }
     let index = read_valid_index("Enter task number to edit: ", 1, task_list.len());
     task_list.view_task(index);
-    println!("{}","Leave fields as blank to use the previous value. Type '#' to leave the field as blank".yellow());
+    print_yellow("Leave fields as blank to use the previous value. Type '#' to leave the field as blank\n");
 
     if let Some(old_task) = task_list.get_task(index){
         let name = read_line_compare("Name: ", &old_task.name);
@@ -66,10 +65,10 @@ pub fn edit_task (task_list: &mut TaskList) {
 
         task_list.replace_task(new_task, index);
         task_list.save_to_file();
-        println!("{}", "Task successfully updated!".green());
+        print_green("Task successfully updated!");
     }
     else {
-        println!("{}","Error fetching data!".red());
+        print_err("Error fetching data!");
     }
 }
 
@@ -106,7 +105,8 @@ pub fn delete_task(task_list: &mut TaskList){
             if confirm_action(&prompt) {
                 let deleted_name = task_list.delete(index);
                 task_list.save_to_file();
-                println!("{}", format!("Deleted {}", deleted_name).red());
+                let msg:String = format!("Deleted {}", deleted_name);
+                print_err(&msg);
             } else {
                 println!("Deletion cancelled!");
             }
@@ -118,11 +118,11 @@ pub fn delete_task(task_list: &mut TaskList){
             if confirm_action(&prompt) {
                 task_list.delete_all();
                 task_list.save_to_file();
-                println!("{}", "Deleted all tasks!".red());
+                print_err("Deleted all tasks!");
             } else {
                 println!("Deletion cancelled!");
             }
         }
-        _ => println!("{}", "Invalid choice, returning to menu!".red()),
+        _ => print_err("Invalid choice, returning to menu!"),
     }
 }
